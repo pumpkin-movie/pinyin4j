@@ -7,6 +7,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class PinyinHelperTest extends TestCase {
   public void testToTongyongPinyinStringArray() {
@@ -589,6 +591,22 @@ public class PinyinHelperTest extends TestCase {
       assertEquals("LǙ", PinyinHelper.toHanyuPinyinStringArray('吕', outputFormat)[0]);
     } catch (BadHanyuPinyinOutputFormatCombination e) {
       e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void testToHanYuPinyinString() throws BadHanyuPinyinOutputFormatCombination {
+    String[][] testStr =
+        new String[][] { {"十三号星期五9", "shi||san||hao||xing||qi||wu"}, {"否极泰来", "pi||ji||tai||lai"},
+            {"最后一个星期五9", "zui||hou||yi||ge||xing||qi||wu"}};
+    HanyuPinyinOutputFormat pyFormat = new HanyuPinyinOutputFormat();
+    pyFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE); //设置样式
+    pyFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+    pyFormat.setVCharType(HanyuPinyinVCharType.WITH_V);
+    // only process chn char
+    for (String[] str : testStr) {
+      String pinyin = PinyinHelper.toHanYuPinyinString(str[0], pyFormat, "||", false);
+      Assert.assertEquals(str[1].toUpperCase(), pinyin.toUpperCase());
     }
   }
 }
